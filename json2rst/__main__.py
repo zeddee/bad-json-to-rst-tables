@@ -38,11 +38,6 @@ from pathlib import Path
 from enum import Enum
 from typing import Tuple, List
 
-FILENAME = os.path.join(
-    os.path.abspath(os.path.curdir),
-    'tests/sample.json'
-    )
-
 class Nodes(Enum):
     """Enum type for rst nodes"""
     TABLE_INIT = '..  list-table::' #: Start of rst list-table node.
