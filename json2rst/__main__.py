@@ -23,11 +23,11 @@ TODO:
           "code-block-item": "print(\"this is a single line in a code block\")",
           "image" : "/img/sample.jpg"
       }
-- Set filename write to from command line args.
+- ✅ Set filename write to from command line args.
 - By default, write to files named after the ``ID`` key in JSON. This is to capture the SA name as the filename.
-- Write proper example.json file.
+- ✅ Write proper example.json file.
 - Write tests
-- Take list of files or a dir from command line args.
+- ✅ Take list of files or a dir from command line args.
 - allow inserting images using base64 uri? e.g. ``.. |image2| image:: data:image/png;base64,iVBORw0KGgoAAAANSUhEU<lots more>``
 
 """
