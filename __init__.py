@@ -28,6 +28,7 @@ TODO:
 - Write proper example.json file.
 - Write tests
 - Take list of files or a dir from command line args.
+- allow inserting images using base64 uri? e.g. ``.. |image2| image:: data:image/png;base64,iVBORw0KGgoAAAANSUhEU<lots more>``
 
 """
 
@@ -35,7 +36,10 @@ import json
 import os
 from enum import Enum
 
-FILENAME = os.path.join(os.path.abspath(os.path.curdir), 'data.json')
+FILENAME = os.path.join(
+    os.path.abspath(os.path.curdir),
+    'tests/sample.json'
+    )
 
 class Nodes(Enum):
     """Enum type for rst nodes"""
@@ -107,5 +111,10 @@ if __name__ == "__main__":
     with open(FILENAME) as f:
         output = render_table(f.read())
         
-        write_file(os.path.join(os.path.abspath(os.path.curdir),"EIQ-2021-1234.rst"), output)
+        write_file(
+            os.path.join(
+                os.path.abspath(os.path.curdir),
+                "sample_output.rst"),
+                output
+                )
 
