@@ -11,6 +11,12 @@ TODO:
 
   E.g. parse the following:
 
+  ..  WARNING::
+
+      problem here! rich content blocks cannot be a single Dict.
+      JSON keys must be unique.
+      So a more suitable format might be a List[Tuple[str, str]]
+
   ..  code-block::
 
       "Assessment" : {
