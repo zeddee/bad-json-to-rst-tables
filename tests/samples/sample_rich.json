@@ -7,6 +7,15 @@
         {"p": "This is a multi\nline field that can contain things like `links <#link>`_\nand code ``snippets``"},
         {"h2": "This is a level 2 heading"},
         {"p": "This is a multi\nline field that can contain things like `links <#link>`_\nand code ``snippets``"},
+        {"ul": "this is an unordered list item"},
+        {"ul": "this is an unordered list item"},
+        {"ul": "this is an unordered list item"},
+        {"ol": "this is an ordered list item"},
+        {"ol": "this is an ordered list item"},
+        {"ol": "this is an ordered list item"},
+        {"ol": "this is an ordered list item"},
+        {"ul": "this is an unordered list item"},
+        {"ol": "this is an ordered list item"},
         {"code": "# this is a single-line code snippet"}
     ]
 }
