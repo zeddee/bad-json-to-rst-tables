@@ -1,0 +1,12 @@
+{
+    "ID": "EIQ-2021-1234",
+    "CVE": "-",
+    "Description": "This is a description",
+    "Assessment": [
+        {"h1": "This is a rich content node"},
+        {"p": "This is a multi\nline field that can contain things like `links <#link>`_\nand code ``snippets``"},
+        {"h2": "This is a level 2 heading"},
+        {"p": "This is a multi\nline field that can contain things like `links <#link>`_\nand code ``snippets``"},
+        {"code": "# this is a single-line code snippet"}
+    ]
+}
