@@ -28,16 +28,23 @@ class RichNode:
         "h2",
         "h3",
         "p",
-        "ul-item",
-        "ol-item",
+        "ul",
+        "ol",
         "code",
-        "code-block-item",
+        "code-block",
         "image",
     ]
 
-    def __init__(self, node_type: str, content: str) -> None:
-        self.content = utils.handle_newlines(content)
+    def __init__(self, node_type: str, content: str, first: bool) -> None:
+        """
+        Args:
+            node_type (str): One of RICH_NODE_TYPES.
+            content (str): Content of node.
+            first (bool): Whether this node is the first 
+        """
+        self.content = content
         self.n = node_type
+        self.first = first
         
         self._is_rich_node()
 
@@ -64,41 +71,45 @@ class RichNode:
             An rST-formatted string ready to plug into our output file.
         """
 
+        LEFTPAD = "" if self.first else Nodes.LEFTPAD.value
+        """If this is the first node in a rich content block, don't add LEFTPAD output"""
 
         if self.n == "h1":
             H1_rst = "*" * (len(self.content) + 2) # Make sure that heading marker is slightly longer than len(self.content)
-            return f"{self.content}\n{H1_rst}"
+            return f"{LEFTPAD}{self.content}\n{Nodes.LEFTPAD.value}{H1_rst}"
 
         elif self.n == "h2":
             H2_rst = "=" * (len(self.content) + 2) # Make sure that heading marker is slightly longer than len(self.content)
-            return f"{self.content}\n{H2_rst}"
+            return f"{LEFTPAD}{self.content}\n{Nodes.LEFTPAD.value}{H2_rst}"
 
         elif self.n == "h2":
             H3_rst = "-" * (len(self.content) + 2) # Make sure that heading marker is slightly longer than len(self.content)
-            return f"{self.content}\n{H3_rst}"
+            return f"{LEFTPAD}{self.content}\n{Nodes.LEFTPAD.value}{H3_rst}"
 
         elif self.n == "p":
-            return self.content
+            return f"{LEFTPAD}{utils.handle_newlines(self.content)}"
 
-        elif self.n == "ul-item":
-            return f"{Nodes.UL_ITEM.value}{self.content}"
+        elif self.n == "ul":
+            return f"{LEFTPAD}{Nodes.UL_ITEM.value}{self.content}"
 
-        elif self.n == "ol-item":
-            return f"{Nodes.OL_ITEM.value}{self.content}"
+        elif self.n == "ol":
+            return f"{LEFTPAD}{Nodes.OL_ITEM.value}{self.content}"
 
         elif self.n == "code":
-            return f"``{self.content}``"
+            return f"{LEFTPAD}``{self.content}``"
 
-        elif self.n == "code-block-item":
+        elif self.n == "code-block":
             # this needs more complex handling. Need to know if there are multiple code-block-items in sequence.
             pass
 
         elif self.n == "image":
             # might need to embed as base64 image.
-            return f"{Nodes.IMAGE.value}{content}"
+            return f"{LEFTPAD}{Nodes.IMAGE.value}{content}"
 
     def _code_block_start() -> str:
+        """remember to add {LEFTPAD} with the calling function"""
         return f"{Nodes.CODE_BLOCK_INIT.value}\n\n"
 
     def _code_block_body() -> str:
+        """remember to add {LEFTPAD} with the calling function"""
         return f"{Nodes.CODE_BLOCK_PAD.value}{self.content}"
