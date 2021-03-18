@@ -81,7 +81,6 @@ class RichNode:
 
 
         if self.n == "heading":
-            print(len(LEFTPAD))
             return "{}**{}**{}".format(
                 LEFTPAD,
                 self.content,
@@ -89,7 +88,6 @@ class RichNode:
             )
 
         elif self.n == "p":
-            print(len(LEFTPAD))
             return "{}{}{}".format(
                 LEFTPAD,
                 utils.handle_newlines(self.content),

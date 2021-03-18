@@ -15,21 +15,21 @@ def handle_rich_content(srcfile: str, rich_content: List[Dict[str, str]]) -> str
 
     output = ""
 
-    for line in rich_content:
-        first = (rich_content.index(line) == 0)
+    for i in range(len(rich_content)):
+        first = (i == 0) # type: bool
+        line = rich_content[i]
         assert(isinstance(line, dict))
 
         keys = line.keys()
-        print(keys)
 
         for key in keys: #: We expect only one key, but still need to iterate over iterator?
-            print(key)
             assert(isinstance(key, str))
             output = output + nodes.RichNode(
                 srcfile,
                 key,
                 line.get(key),
-                first).parse()
+                first
+                ).parse()
 
     return output
 
