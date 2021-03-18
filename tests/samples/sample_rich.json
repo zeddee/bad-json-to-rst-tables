@@ -17,6 +17,11 @@
         {"ol": "this is an ordered list item"},
         {"ul": "this is an unordered list item"},
         {"ol": "this is an ordered list item"},
-        {"code": "# this is a single-line code snippet"}
+        {"code": "# this is a single-line code snippet"},
+        {"heading": "Next up is a code block"},
+        {"code-block": "def code_block(a_string: str):"},
+        {"code-block": "    print(\"this is rather inelegant\")"},
+        {"code-block": "    print(\"and only allows one line of code per JSON line\")"},
+        {"code-block": "    //and indentation is manual… but that's what we have right now"}
     ]
 }

@@ -3,9 +3,9 @@ import utils
 
 class Nodes(Enum):
     """Enum type for rst nodes"""
-    TABLE_INIT = '..  list-table::' #: Start of rst list-table node.
-    ATTR_HEADERROWS = '    :header-rows: 1' #: Node for the list-table attribute ``:header-rows: 1``. Always set to ``1``.
-    ATTR_STUBCOLS   = '    :stub-columns: 1' #: Node for the list-table attribute ``:stub-columns: 1``. Always set to ``1``.
+    TABLE_INIT = '..  list-table::\n' #: Start of rst list-table node.
+    ATTR_HEADERROWS = '    :header-rows: 1\n' #: Node for the list-table attribute ``:header-rows: 1``. Always set to ``1``.
+    ATTR_STUBCOLS   = '    :stub-columns: 1\n' #: Node for the list-table attribute ``:stub-columns: 1``. Always set to ``1``.
     STUB_ITEM  = '    - * ' #: Node for first item in a table row.
     ITEM        = '      * ' #: Node for item in a table row.
     LEFTPAD     = r'        '
@@ -18,7 +18,7 @@ Works only if the root table is at col 0
     # CODE #: Omit. Because we need to surround the content of
     # <code> nodes with double backticks, as opposed to prefixing
     # the node (like with the other Nodes here)
-    CODE_BLOCK_INIT = '..  code-block::'
+    CODE_BLOCK_INIT = '..  code-block::\n'
     CODE_BLOCK_PAD = '    '
     IMAGE = '..  image:: '
 
@@ -37,7 +37,10 @@ class RichNode:
         srcfile: str,
         node_type: str,
         content: str,
-        first: bool) -> None:
+        first: bool,
+        prev_node_type: str,
+        next_node_type: str,
+        ) -> None:
         """
         Args:
             node_type (str): One of RICH_NODE_TYPES.
@@ -48,6 +51,8 @@ class RichNode:
         self.n = node_type
         self.first = first
         self.srcfile = srcfile
+        self.prev = prev_node_type
+        self.next = next_node_type
         
         self._is_rich_node()
 
@@ -118,8 +123,24 @@ class RichNode:
             )
 
         elif self.n == "code-block":
-            # this needs more complex handling. Need to know if there are multiple code-block-items in sequence.
-            pass
+            code_out = ""
+            
+            if self.prev != "code-block":
+                code_out = f"{LEFTPAD}{Nodes.CODE_BLOCK_INIT.value}\n"
+            
+            code_out = code_out + "{}{}{}".format(
+                LEFTPAD,
+                Nodes.CODE_BLOCK_PAD.value,
+                self.content,
+            )
+
+            if self.next == "code-block":
+                code_out = code_out + "\n"
+            else:
+                code_out = code_out + LINE_END
+
+            return code_out
+            
 
         elif self.n == "image":
             # might need to embed as base64 image.

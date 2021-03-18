@@ -14,6 +14,8 @@ def handle_rich_content(srcfile: str, rich_content: List[Dict[str, str]]) -> str
         exit(1)
 
     output = ""
+    prev_key = ""
+    next_key = ""
 
     for i in range(len(rich_content)):
         first = (i == 0) # type: bool
@@ -21,15 +23,25 @@ def handle_rich_content(srcfile: str, rich_content: List[Dict[str, str]]) -> str
         assert(isinstance(line, dict))
 
         keys = line.keys()
+        assert(len(keys) == 1) #: Given the data structure, we expect only one key
 
-        for key in keys: #: We expect only one key, but still need to iterate over iterator?
-            assert(isinstance(key, str))
-            output = output + nodes.RichNode(
-                srcfile,
-                key,
-                line.get(key),
-                first
-                ).parse()
+        key = list(keys)[0] #: We have to cast type of keys from dict_keys to list
+        assert(isinstance(key, str))
+
+        if i < len(rich_content)-1:
+            next_key = list(rich_content[i+1].keys())[0]
+
+        output = output + nodes.RichNode(
+            srcfile,
+            key,
+            line.get(key),
+            first,
+            prev_key,
+            next_key,
+            ).parse()
+
+        prev_key = key
+
 
     return output
 
@@ -44,8 +56,8 @@ def render_table(srcfile: str, json_data: str) -> str:
         json_data (str): Expects a JSON string.
     """
 
-    table_head = f"{nodes.Nodes.TABLE_INIT.value}\n" \
-        f"{nodes.Nodes.ATTR_STUBCOLS.value}\n" \
+    table_head = f"{nodes.Nodes.TABLE_INIT.value}" \
+        f"{nodes.Nodes.ATTR_STUBCOLS.value}" \
         "\n"
 
     output = table_head
