@@ -22,6 +22,10 @@
         {"code-block": "def code_block(a_string: str):"},
         {"code-block": "    print(\"this is rather inelegant\")"},
         {"code-block": "    print(\"and only allows one line of code per JSON line\")"},
-        {"code-block": "    //and indentation is manual… but that's what we have right now"}
+        {"code-block": "    //and indentation is manual… but that's what we have right now"},
+        {"heading": "Next up is a png image"},
+        {"image": "./sample-image.png"},
+        {"heading": "Next up is a jpg image"},
+        {"image": "./sample-image.jpg"}
     ]
 }

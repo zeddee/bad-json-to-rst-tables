@@ -1,3 +1,5 @@
+import base64
+from pathlib import Path
 from enum import Enum
 import utils
 
@@ -144,5 +146,26 @@ class RichNode:
 
         elif self.n == "image":
             # might need to embed as base64 image.
-            return f"{LEFTPAD}{Nodes.IMAGE.value}{self.content}"
+            resource_path = Path(self.srcfile).parent
+            if self.content.startswith("./") or self.content.startswith("../"): # if image path is a relative path
+                img_path = resource_path.joinpath(Path(self.content)) # just join 
+            else:
+                img_path = Path(self.content).resolve().absolute()
+            img_exts = [".jpg",".png"] #: keep supported image types
+
+            if not img_path.is_file():
+                print(f"{img_path} must be an image file. Paths are resolved from directory you're running json2rst in.")
+                exit(1)
+
+            if img_path.suffix not in img_exts:
+                print(f"{img_path} must have one of these file extensions: {img_exts}")
+                exit(1)
+
+            return f"{LEFTPAD}{Nodes.IMAGE.value}data:image/{img_path.suffix.strip('.')};base64,{self._encode_image(img_path)}\n\n"
+
+    def _encode_image(self, file: str) -> str:
+        with open(file, "rb") as f:
+            img = base64.b64encode(f.read())
+
+        return str(img).strip("b").strip("'")
 
