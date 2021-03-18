@@ -24,7 +24,7 @@ TODO:
           {"image" : "/img/sample.jpg"}
       ]
 
-- 🚨 HAHAH. FIXME. forgot that we can't have section headings within a list-table:
+- ✅ HAHAH. FIXME ``sample_rich.rst:16: (SEVERE/4) Unexpected section title.``
 
   ..  code-block::
 
@@ -33,7 +33,7 @@ TODO:
       This is a rich content node
       *****************************
       Exiting due to level-4 (SEVERE) system message.
-
+- FIXME: headers are not being properly indented by LEFTPAD
 - implement positional awareness e.g. ``prev`` and ``next``, so that we can detect consecutive "ul", "ol", and "code-block" nodes
 - ✅ Set filename write to from command line args.
 - By default, write to files named after the ``ID`` key in JSON. This is to capture the SA name as the filename.
@@ -100,7 +100,7 @@ def smart_filepaths(filepath: str) -> List[str]:
         return Path(filename).suffix == ".json"
         
 
-    thispath = Path(filepathG.absolute()
+    thispath = Path(filepath).absolute()
 
     if Path(thispath).is_dir():
         filelist = Path(thispath).iterdir()
@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
     for thisfile in infile_list:
         with open(thisfile) as f:
-            output = utils.render_table(f.read())
+            output = utils.render_table(thisfile, f.read())
             
             write_file(
                 Path.joinpath(

@@ -3,10 +3,11 @@ from typing import List, Dict, Tuple
 
 import nodes
 
-def handle_rich_content(rich_content: List[Dict[str, str]]) -> str:
+def handle_rich_content(srcfile: str, rich_content: List[Dict[str, str]]) -> str:
     """
     Args:
         rich_content (List[Dict[str, str]]): Expects a string like "[{"key":"value"}]
+        srcfile (str): Name of file where the data comes from, for naming an offending file when data validation fails.
     """
     if not isinstance(rich_content, list):
         # TODO: handle exception
@@ -19,24 +20,31 @@ def handle_rich_content(rich_content: List[Dict[str, str]]) -> str:
         assert(isinstance(line, dict))
 
         keys = line.keys()
+        print(keys)
 
         for key in keys: #: We expect only one key, but still need to iterate over iterator?
-            output = output + nodes.RichNode(key, line.get(key), first).parse()
+            print(key)
+            assert(isinstance(key, str))
+            output = output + nodes.RichNode(
+                srcfile,
+                key,
+                line.get(key),
+                first).parse()
 
     return output
 
 
-def render_table(json_data: str) -> str:
+def render_table(srcfile: str, json_data: str) -> str:
     """
     The Table constructor creates
     an rST table as an object
 
     Args:
+        srcfile (str): Filename is passed in here so if anything fails due to invalid content, we can construct an error message pointing to the offending file.
         json_data (str): Expects a JSON string.
     """
 
     table_head = f"{nodes.Nodes.TABLE_INIT.value}\n" \
-        f"{nodes.Nodes.ATTR_HEADERROWS.value}\n" \
         f"{nodes.Nodes.ATTR_STUBCOLS.value}\n" \
         "\n"
 
@@ -57,7 +65,7 @@ def render_table(json_data: str) -> str:
         val = data.get(k)
 
         if isinstance(val, list):
-            parsed_val = handle_rich_content(val)
+            parsed_val = handle_rich_content(srcfile, val)
         else:
             parsed_val = handle_newlines(val)
 
