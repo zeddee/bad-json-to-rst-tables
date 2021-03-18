@@ -146,10 +146,3 @@ class RichNode:
             # might need to embed as base64 image.
             return f"{LEFTPAD}{Nodes.IMAGE.value}{self.content}"
 
-    def _code_block_start(self) -> str:
-        """remember to add {LEFTPAD} with the calling function"""
-        return f"{Nodes.CODE_BLOCK_INIT.value}\n\n"
-
-    def _code_block_body(self) -> str:
-        """remember to add {LEFTPAD} with the calling function"""
-        return f"{Nodes.CODE_BLOCK_PAD.value}{self.content}"
