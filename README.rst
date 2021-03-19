@@ -1,7 +1,7 @@
 Bad JSON to rST tables converter
 ***********************************
 
-Inelegantly converts JSON files to rST tables.
+Inelegantly converts JSON files to tables in rST files.
 
 To run:
 
@@ -17,6 +17,26 @@ To run:
       -h, --help       show this help message and exit
       --input INFILES  Input JSON file, or a directory containing JSON files.
       --output OUTDIR  Output directory. Defaults to current directory.
+
+Page titles
+=============
+
+Page titles are crudely implemented for now.
+
+A page title using the filename of the JSON file is
+added to the top of each rST file.
+
+For example, running ``python json2rst --input sample.json --output _output``
+creates the file ``_output/sample.rst`` which has the following first few lines:
+
+..  code-block:: text
+
+    sample
+    ********
+
+    ..  list-table::
+
+        //...
 
 Rich content
 =============

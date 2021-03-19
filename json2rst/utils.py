@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from typing import List, Dict, Tuple
 
 import nodes
@@ -46,7 +47,7 @@ def handle_rich_content(srcfile: str, rich_content: List[Dict[str, str]]) -> str
     return output
 
 
-def render_table(srcfile: str, json_data: str) -> str:
+def render_page(srcfile: str, json_data: str) -> str:
     """
     The Table constructor creates
     an rST table as an object
@@ -56,11 +57,17 @@ def render_table(srcfile: str, json_data: str) -> str:
         json_data (str): Expects a JSON string.
     """
 
+    page_title = "{}\n{}\n\n".format(
+        Path(srcfile).stem, #: TODO: Use filename as page title for now. To implement something a bit more sophisticated later.
+        "*" * (len(Path(srcfile).stem) + 2), #: Makes sure that rST heading marker is always longer than page title.
+    )
+
+
     table_head = f"{nodes.Nodes.TABLE_INIT.value}" \
         f"{nodes.Nodes.ATTR_STUBCOLS.value}" \
         "\n"
 
-    output = table_head
+    output = page_title + table_head
 
     data = json.loads(json_data)
 

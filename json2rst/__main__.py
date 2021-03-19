@@ -126,7 +126,7 @@ if __name__ == "__main__":
 
     for thisfile in infile_list:
         with open(thisfile) as f:
-            output = utils.render_table(thisfile, f.read())
+            output = utils.render_page(thisfile, f.read())
 
 
             write_file(
