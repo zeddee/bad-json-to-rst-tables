@@ -3,9 +3,15 @@ Bad JSON to rST tables converter
 
 Inelegantly converts JSON files to rST tables.
 
+To run:
+
+- Clone the repository: ``git clone https://github.com/zeddee/bad-json-to-rst-tables"
+- Navigate to the cloned dir: ``cd bad-json-to-rst-tables``
+- Run the Python package (because I am bad at packaging): ``python3 json2rst --input <inputdir> --output <outputdir>``
+
 ..  code-block::
 
-    usage: __init__.py [-h] --input INFILES [--output OUTDIR]
+    usage: python3 json2rst [-h] --input INFILES [--output OUTDIR]
 
     optional arguments:
       -h, --help       show this help message and exit
