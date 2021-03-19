@@ -13,19 +13,32 @@ TODO:
 
   ..  code-block::
 
-      "Assessment" : {
-          "h1" : "Heading 1",
-          "h2" : "Heading 2",
-          "ul-item" : "this is an unordered list item",
-          "ol-item" : "this is an ordered list item",
-          "p" : "this is a paragraph",
-          "code" : "print(\"this is a block of code (single-line)\")",
-          "code-block-item": "print(\"this is a single line in a code block\")",
-          "image" : "/img/sample.jpg"
-      }
+      "Assessment" : [
+          {"h1" : "Heading 1"},
+          {"h2" : "Heading 2"},
+          {"ul" : "this is an unordered list item"},
+          {"ol" : "this is an ordered list item"},
+          {"p" : "this is a paragraph"},
+          {"code" : "print(\"this is a block of code (single-line)\")"},
+          {"code-block": "print(\"this is a single line in a code block\")"},
+          {"image" : "/img/sample.jpg"}
+      ]
+
+- ✅ HAHAH. FIXME ``sample_rich.rst:16: (SEVERE/4) Unexpected section title.``
+
+  ..  code-block::
+
+      sample_rich.rst:16: (SEVERE/4) Unexpected section title.
+
+      This is a rich content node
+      *****************************
+      Exiting due to level-4 (SEVERE) system message.
+- FIXME: headers are not being properly indented by LEFTPAD
+- implement positional awareness e.g. ``prev`` and ``next``, so that we can detect consecutive "ul", "ol", and "code-block" nodes
 - ✅ Set filename write to from command line args.
 - By default, write to files named after the ``ID`` key in JSON. This is to capture the SA name as the filename.
 - ✅ Write proper example.json file.
+- ✅ Write example.json file for rich content
 - Write tests
 - ✅ Take list of files or a dir from command line args.
 - allow inserting images using base64 uri? e.g. ``.. |image2| image:: data:image/png;base64,iVBORw0KGgoAAAANSUhEU<lots more>``
@@ -34,76 +47,14 @@ TODO:
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
-from enum import Enum
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 
-FILENAME = os.path.join(
-    os.path.abspath(os.path.curdir),
-    'tests/sample.json'
-    )
+import nodes
+import utils
 
-class Nodes(Enum):
-    """Enum type for rst nodes"""
-    TABLE_INIT = '..  list-table::' #: Start of rst list-table node.
-    ATTR_HEADERROWS = '    :header-rows: 1' #: Node for the list-table attribute ``:header-rows: 1``. Always set to ``1``.
-    ATTR_STUBCOLS   = '    :stub-columns: 1' #: Node for the list-table attribute ``:stub-columns: 1``. Always set to ``1``.
-    STUB_ITEM  = '    - * ' #: Node for first item in a table row.
-    ITEM        = '      * ' #: Node for item in a table row.
-    LEFTPAD     = '        '
-    """Pads 6 \s characters. Used to pad content in tables so that
-they match the indentation of their parent table nodes.
-Works only if the root table is at col 0
-(told ya this is an inelegant repo)."""
-
-def render_table(json_data: str) -> str:
-    """
-    The Table constructor creates
-    an rST table as an object
-
-    Args:
-        json_data (str): Expects a JSON string.
-    """
-
-    table_head = f"{Nodes.TABLE_INIT.value}\n" \
-        f"{Nodes.ATTR_HEADERROWS.value}\n" \
-        f"{Nodes.ATTR_STUBCOLS.value}\n" \
-        "\n"
-
-    output = table_head
-
-    data = json.loads(json_data)
-
-    if isinstance(data, list):
-        pass
-
-    if isinstance(data, dict):
-        keys = data.keys()
-
-
-    for k in keys:
-        title = "{}{}\n".format(Nodes.STUB_ITEM.value,k)
-        val = handle_newlines(data.get(k))
-
-        item = f"{Nodes.ITEM.value}{val}\n\n"
-        output = output + title + item
-
-    return output
-
-def handle_newlines(data: str) -> str:
-    if "\n" not in data:
-        return data
-
-    output = ""
-    strlist = data.split("\n")
-
-    for line in strlist:
-        if strlist.index(line) == 0:
-            output = line + "\n"
-        else:
-            output = output + Nodes.LEFTPAD.value + line + "\n"
-
-    return output
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '.')))
 
 def write_file(filepath: str, data: str) -> None:
     with open(filepath,"w") as f:
@@ -173,7 +124,7 @@ if __name__ == "__main__":
 
     for thisfile in infile_list:
         with open(thisfile) as f:
-            output = render_table(f.read())
+            output = utils.render_table(thisfile, f.read())
             
             write_file(
                 Path.joinpath(
