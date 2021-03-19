@@ -6,7 +6,7 @@ and spits out rST ``list-table`` s inelegantly.
 
 TODO:
 
-- Allow writing longform content to a single cell
+- ✅ Allow writing longform content to a single cell
   by implementing a ipynb-like dict format.
 
   E.g. parse the following:
@@ -24,24 +24,25 @@ TODO:
           {"image" : "/img/sample.jpg"}
       ]
 
-- ✅ HAHAH. FIXME ``sample_rich.rst:16: (SEVERE/4) Unexpected section title.``
-
-  ..  code-block::
-
-      sample_rich.rst:16: (SEVERE/4) Unexpected section title.
-
-      This is a rich content node
-      *****************************
-      Exiting due to level-4 (SEVERE) system message.
-- FIXME: headers are not being properly indented by LEFTPAD
-- implement positional awareness e.g. ``prev`` and ``next``, so that we can detect consecutive "ul", "ol", and "code-block" nodes
+- ✅ HAHAH. FIXME ``sample_rich.rst:16: (SEVERE/4)
+  Unexpected section title.``
+- ✅ headers are not being properly indented by LEFTPAD
+- ✅ implement positional awareness e.g. ``prev`` and
+  ``next``, so that we can detect consecutive "ul", "ol",
+  and "code-block" nodes
+- allow users to select whether to embed images as base64,
+  or resolve and keep their paths. This also means we have
+  to package the output together with the images.
 - ✅ Set filename write to from command line args.
-- By default, write to files named after the ``ID`` key in JSON. This is to capture the SA name as the filename.
+- By default, write to files named after the ``ID`` key in
+  JSON. This is to capture the SA name as the filename.
 - ✅ Write proper example.json file.
 - ✅ Write example.json file for rich content
 - Write tests
 - ✅ Take list of files or a dir from command line args.
-- allow inserting images using base64 uri? e.g. ``.. |image2| image:: data:image/png;base64,iVBORw0KGgoAAAANSUhEU<lots more>``
+- ✅ allow inserting images using base64 uri? e.g. ``..
+  |image2| image::
+  data:image/png;base64,iVBORw0KGgoAAAANSUhEU<lots more>``
 
 """
 import argparse
