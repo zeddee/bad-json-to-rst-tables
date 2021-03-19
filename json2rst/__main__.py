@@ -99,7 +99,8 @@ def smart_filepaths(filepath: str) -> List[str]:
     """
     def is_json(filename: str) -> bool:
         return Path(filename).suffix == ".json"
-        
+
+
 
     thispath = Path(filepath).absolute()
 
@@ -126,7 +127,8 @@ if __name__ == "__main__":
     for thisfile in infile_list:
         with open(thisfile) as f:
             output = utils.render_table(thisfile, f.read())
-            
+
+
             write_file(
                 Path.joinpath(
                     outputdir,
