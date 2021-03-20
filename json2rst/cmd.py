@@ -122,7 +122,9 @@ def _pivot(args: any):
     infile_list,
     pivot_headers,
     args.strict,
-    args.csv_out
+    args.csv_out,
+    args.sort_by,
+    args.sort_order,
     ).pivot()
 
 def _parse_headers(raw_headers: str) -> Set[str]:

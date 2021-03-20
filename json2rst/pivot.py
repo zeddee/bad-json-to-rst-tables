@@ -34,6 +34,7 @@ TODO:
 """
 import csv
 import json
+import operator
 import sys, os
 from typing import List, Dict
 
@@ -44,7 +45,9 @@ class Pivot:
                  file_list: List[str],
                  header_list: List[str],
                  strict: bool,
-                 csv_out: str) -> None:
+                 csv_out: str,
+                 sort_key: str,
+                 sort_order: str) -> None:
         """
         Pivot object.
 
@@ -69,6 +72,8 @@ class Pivot:
         self.header_list = header_list
         self.strict = strict
         self.csv_out = csv_out
+        self.sort_key = sort_key
+        self.sort_order = sort_order
 
 
     def pivot(self) -> None:
@@ -79,6 +84,9 @@ class Pivot:
         csvout = self.csv_out if self.csv_out else "pivot.csv"
 
         self._write_csv(csvout)
+
+        if self.sort_key:
+            self._sort_by_keys(csvout)
 
     def _write_csv(self, filename:str) -> None:
         with open(filename,"w") as csvfile:
@@ -114,3 +122,26 @@ class Pivot:
                     "Dictionaries used in Pivot must have '{}' key".format(item)
 
         return True
+
+    def _sort_by_keys(self, filename: str) -> None:
+        """
+        Another crude function.
+        Instead of getting the csv data to sort from a buffer,
+        we're reading from a file and then writing back to it. 🙃
+        """
+        sort_types = ["ascending", "descending"]
+        assert(self.sort_order in sort_types), "Sort order must be one of {}".format(sort_types)
+
+        rev = True if self.sort_order == "descending" else False
+
+        with open(filename, "r") as csvfile:
+            tmp = csv.DictReader(csvfile)
+            # sortedlist = sorted(spamreader, key=lambda row:(row['column_1'],row['column_2']), reverse=False)
+            sortedlist = sorted(tmp, key=operator.itemgetter(self.sort_key), reverse=rev)
+
+
+        with open(filename, 'w') as f:
+            writer = csv.DictWriter(f, fieldnames=self.header_list)
+            writer.writeheader()
+            for row in sortedlist:
+                writer.writerow(row)
