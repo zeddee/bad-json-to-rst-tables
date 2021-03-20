@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Tuple, Set
 
 from . import utils
+from .pivot import Pivot
 
 def _cli() -> any:
     """
@@ -36,7 +37,7 @@ def _cli() -> any:
         help="""Specify 'pivot' to pivot JSON files.
 Collects JSON files from --input,and
 extract values from fields that match names in --header,
-and puts them in rST tables.
+and write to a csv-table.
 """
      )
 
@@ -81,6 +82,14 @@ E.g.: --headers='key1,key2,key3'
         help="""Sort --sort-by in 'ascending' or 'descending' order."""
     )
 
+    cmd_pivot.add_argument(
+      "--csv-out",
+      dest="csv_out",
+      type=str,
+      required=False,
+      help="Name of output CSV file saved in --output dir."
+    )
+
     return parser.parse_args()
 
 def _convert_json_to_rst(infiles: str, outdir: str):
@@ -100,8 +109,18 @@ def _convert_json_to_rst(infiles: str, outdir: str):
                   )
 
 def _pivot(args: any):
+  """
+  TODO: All this file wrangling should be offloaded
+  """
   pivot_headers = _parse_headers(args.pivot_headers)
-  pass
+  infile_list = utils.smart_filepaths(args.infiles)
+
+  Pivot(
+    infile_list,
+    pivot_headers,
+    args.strict,
+    args.csv_out
+    ).pivot()
 
 def _parse_headers(raw_headers: str) -> Set[str]:
   """
@@ -114,11 +133,10 @@ def _parse_headers(raw_headers: str) -> Set[str]:
   output = list()
 
   for header in raw_headers.split(sep=","):
-    output.append(header.strip())
+    if header not in output: # Allow only unique headers
+      output.append(header.strip())
 
-  final_headers = set(output)
-
-  print("Pivoting JSON files using headers: {}".format(final_headers))
+  print("Pivoting JSON files using headers: {}".format(output))
 
   return final_headers
 
