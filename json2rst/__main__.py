@@ -45,31 +45,12 @@ TODO:
   data:image/png;base64,iVBORw0KGgoAAAANSUhEU<lots more>``
 
 """
-import argparse
-import json
 import os
 import sys
-from pathlib import Path
-from typing import Tuple, List, Dict
 
-from . import cli
-from . import nodes
-from . import utils
+from . import cmd
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '.')))
 
 if __name__ == "__main__":
-    infile_list, outputdir = cli.cli()
-
-    for thisfile in infile_list:
-        with open(thisfile) as f:
-            output = utils.render_page(thisfile, f.read())
-
-
-            utils.write_file(
-                Path.joinpath(
-                    outputdir,
-                    Path(thisfile).stem + ".rst"),
-                    output
-                    )
-
+    cmd.cmd()
