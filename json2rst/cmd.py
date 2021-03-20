@@ -1,9 +1,12 @@
 import argparse
+import logging
 from pathlib import Path
 from typing import Tuple, Set
 
 from . import utils
 from .pivot import Pivot
+
+logging.basicConfig(level=logging.DEBUG)
 
 def _cli() -> any:
     """
@@ -136,18 +139,18 @@ def _parse_headers(raw_headers: str) -> Set[str]:
     if header not in output: # Allow only unique headers
       output.append(header.strip())
 
-  print("Pivoting JSON files using headers: {}".format(output))
+  logging.debug("Pivoting JSON files using headers: {}".format(output))
 
-  return final_headers
+  return output
 
 def cmd():
   args = _cli()
 
-  print("ARGS\n========\n{}\n========".format(args))
+  logging.debug(args)
 
   if not args.pivot:
     _convert_json_to_rst(args.infiles, args.outdir)
 
   else:
     _pivot(args)
-    print("YOU HAVE REACHED THE END OF EARLY ACCESS CONTENT.")
+    logging.debug("YOU HAVE REACHED THE END OF EARLY ACCESS CONTENT.")
