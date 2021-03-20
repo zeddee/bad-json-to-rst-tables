@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import List, Dict, Tuple
 
-import nodes
+from . import nodes
 
 def handle_rich_content(srcfile: str, rich_content: List[Dict[str, str]]) -> str:
     """
@@ -107,3 +107,46 @@ def handle_newlines(data: str) -> str:
             output = output + nodes.Nodes.LEFTPAD.value + line + "\n"
 
     return output
+
+def smart_filepaths(filepath: str) -> List[str]:
+    """
+    Parses a filepath.
+    - If it's a directory, return a list of filenames
+    - If it's a single file, return list(filename)
+
+    Args:
+        filepath (str): Takes a filepath and:
+            - Decides if it's a directory or file.
+
+                - If it's a directory, returns the list of JSON files
+                  in the directory as a string.
+                - If it's a single file, returns the name of that
+                  file in a list.
+    """
+    def is_json(filename: str) -> bool:
+        return Path(filename).suffix == ".json"
+
+
+
+    thispath = Path(filepath).absolute()
+
+    if Path(thispath).is_dir():
+        filelist = Path(thispath).iterdir()
+
+        out_filelist = list()
+
+        for f in filelist:
+            if is_json(f):
+                out_filelist.append(f)
+
+        return out_filelist
+
+    if Path(thispath).is_file():
+        if not is_json(thispath):
+            print(f"{thispath} is not a JSON file.")
+            exit(1)
+        return list(thispath)
+
+def write_file(filepath: str, data: str) -> None:
+    with open(filepath,"w") as f:
+        f.write(data)

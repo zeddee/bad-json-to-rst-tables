@@ -1,7 +1,8 @@
 import base64
 from pathlib import Path
 from enum import Enum
-import utils
+
+from . import utils
 
 class Nodes(Enum):
     """Enum type for rst nodes"""
@@ -11,7 +12,7 @@ class Nodes(Enum):
     STUB_ITEM  = '    - * ' #: Node for first item in a table row.
     ITEM        = '      * ' #: Node for item in a table row.
     LEFTPAD     = r'        '
-    """Pads 8 ``\s`` characters. Used to pad content in tables so that
+    """Pads 8 ``\\s`` characters. Used to pad content in tables so that
 they match the indentation of their parent table nodes.
 Works only if the root table is at col 0
 (told ya this is an inelegant repo)."""

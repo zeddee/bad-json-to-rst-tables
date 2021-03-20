@@ -45,94 +45,12 @@ TODO:
   data:image/png;base64,iVBORw0KGgoAAAANSUhEU<lots more>``
 
 """
-import argparse
-import json
 import os
 import sys
-from pathlib import Path
-from typing import Tuple, List, Dict
 
-import nodes
-import utils
+from . import cmd
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '.')))
 
-def write_file(filepath: str, data: str) -> None:
-    with open(filepath,"w") as f:
-        f.write(data)
-
-
-def cli() -> Tuple[List[str], str]:
-    """
-    CLI helper.
-
-    Returns:
-        Tuple[List[str],str]:
-            (List[str]): A list of filenames to process.
-            (str): Directory to write rST files to.
-    """
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        "--input",
-        dest="infiles",
-        required=True,
-        help="Input JSON file, or a directory containing JSON files.")
-    parser.add_argument(
-        "--output",
-        dest="outdir",
-        default=".",
-        help="Output directory. Defaults to current directory.")
-
-    args = parser.parse_args()
-
-    infile_list = smart_filepaths(args.infiles)
-    outputdir = Path(args.outdir).absolute()
-
-    return (infile_list, outputdir)
-
-def smart_filepaths(filepath: str) -> List[str]:
-    """
-    Parses a filepath.
-    - If it's a directory, return a list of filenames
-    - If it's a single file, return list(filename)
-    """
-    def is_json(filename: str) -> bool:
-        return Path(filename).suffix == ".json"
-
-
-
-    thispath = Path(filepath).absolute()
-
-    if Path(thispath).is_dir():
-        filelist = Path(thispath).iterdir()
-
-        out_filelist = list()
-
-        for f in filelist:
-            if is_json(f):
-                out_filelist.append(f)
-
-        return out_filelist
-
-    if Path(thispath).is_file():
-        if not is_json(thispath):
-            print(f"{thispath} is not a JSON file.")
-            exit(1)
-        return list(thispath)
-
 if __name__ == "__main__":
-    infile_list, outputdir = cli()
-
-    for thisfile in infile_list:
-        with open(thisfile) as f:
-            output = utils.render_page(thisfile, f.read())
-
-
-            write_file(
-                Path.joinpath(
-                    outputdir,
-                    Path(thisfile).stem + ".rst"),
-                    output
-                    )
-
+    cmd.cmd()
