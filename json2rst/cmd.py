@@ -1,6 +1,6 @@
 import argparse
 from pathlib import Path
-from typing import Tuple, List
+from typing import Tuple, Set
 
 from . import utils
 
@@ -49,6 +49,8 @@ and puts them in rST tables.
 Add a list of header names as comma-separated values.
 JSON files from --input will be pivoted against this list.
 
+Headers MUST BE UNIQUE (RFC8259 §4). Duplicate headers are discarded.
+
 E.g.: --headers='key1,key2,key3'
 """
     )
@@ -81,16 +83,26 @@ def _convert_json_to_rst(infiles: str, outdir: str):
 
 def _pivot(args: any):
   pivot_headers = _parse_headers(args.pivot_headers)
-  print(pivot_headers)
   pass
 
-def _parse_headers(raw_headers: str) -> List[str]:
+def _parse_headers(raw_headers: str) -> Set[str]:
+  """
+  Args:
+    raw_headers (str): Value from args.pivot_headers.
+
+  Returns:
+    A Set of headers. This automatically discards duplicate headers.
+  """
   output = list()
 
   for header in raw_headers.split(sep=","):
     output.append(header.strip())
 
-  return output
+  final_headers = set(output)
+
+  print("Pivoting JSON files using headers: {}".format(final_headers))
+
+  return final_headers
 
 def cmd():
   args = _cli()
