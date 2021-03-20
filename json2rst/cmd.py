@@ -4,17 +4,27 @@ from typing import Tuple, List
 
 from . import utils
 
-def cli() -> Tuple[List[str], str]:
+def _cli() -> any:
     """
     CLI helper.
 
     Returns:
-        Tuple[List[str],str]:
-            (List[str]): A list of filenames to process.
-            (str): Directory to write rST files to.
+        a argparse.Namespace object, that looks very much like a NamedTuple
     """
 
-    parser = argparse.ArgumentParser(add_help=True)
+    parser = argparse.ArgumentParser()
+
+    cmd_rst = parser.add_argument_group("General options")
+    cmd_rst.add_argument(
+        "--input",
+        dest="infiles",
+        required=True,
+        help="Input JSON file, or a directory containing JSON files.")
+    cmd_rst.add_argument(
+        "--output",
+        dest="outdir",
+        default=".",
+        help="Output directory. Defaults to current directory.")
 
     cmd_pivot = parser.add_argument_group("Pivot a directory of JSON files.")
 
@@ -24,9 +34,9 @@ def cli() -> Tuple[List[str], str]:
         nargs="?",
         default=False,
         help="""Specify 'pivot' to pivot JSON files.
-Collects JSON files from a directory and
-extract values from fields that have these header names
-to put them in rST tables.
+Collects JSON files from --input,and
+extract values from fields that match names in --header,
+and puts them in rST tables.
 """
      )
 
@@ -51,28 +61,11 @@ E.g.: --headers='key1,key2,key3'
         """
     )
 
-
-    cmd_rst = parser.add_argument_group("General options")
-    cmd_rst.add_argument(
-        "--input",
-        dest="infiles",
-        required=True,
-        help="Input JSON file, or a directory containing JSON files.")
-    cmd_rst.add_argument(
-        "--output",
-        dest="outdir",
-        default=".",
-        help="Output directory. Defaults to current directory.")
-
     return parser.parse_args()
 
-def cmd():
-  args = cli()
-
-  print("ARGS\n========\n{}\n========".format(args))
-
-  infile_list = utils.smart_filepaths(args.infiles)
-  outputdir = Path(args.outdir).absolute()
+def _convert_json_to_rst(infiles: str, outdir: str):
+  infile_list = utils.smart_filepaths(infiles)
+  outputdir = Path(outdir).absolute()
 
   for thisfile in infile_list:
       with open(thisfile) as f:
@@ -85,3 +78,28 @@ def cmd():
                   Path(thisfile).stem + ".rst"),
                   output
                   )
+
+def _pivot(args: any):
+  pivot_headers = _parse_headers(args.pivot_headers)
+  print(pivot_headers)
+  pass
+
+def _parse_headers(raw_headers: str) -> List[str]:
+  output = list()
+
+  for header in raw_headers.split(sep=","):
+    output.append(header.strip())
+
+  return output
+
+def cmd():
+  args = _cli()
+
+  print("ARGS\n========\n{}\n========".format(args))
+
+  if not args.pivot:
+    _convert_json_to_rst(args.infiles, args.outdir)
+  
+  else:
+    _pivot(args)
+    print("YOU HAVE REACHED THE END OF EARLY ACCESS CONTENT.")
