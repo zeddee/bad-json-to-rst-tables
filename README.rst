@@ -5,7 +5,7 @@ Inelegantly converts JSON files to tables in rST files.
 
 To run:
 
-- Clone the repository: ``git clone https://github.com/zeddee/bad-json-to-rst-tables"
+- Clone the repository: ``git clone https://github.com/zeddee/bad-json-to-rst-tables``
 - Navigate to the cloned dir: ``cd bad-json-to-rst-tables``
 - Run the Python package (because I am bad at packaging): ``python3 json2rst --input <inputdir> --output <outputdir>``
 
@@ -29,7 +29,7 @@ Usage
       --input INFILES       Input JSON file, or a directory containing JSON files.
       --output OUTDIR       Output directory. Defaults to current directory.
 
-    Pivot a directory of JSON files.:
+    Pivot a directory of JSON files:
       pivot                 Specify 'pivot' to pivot JSON files. Collects JSON
                             files from --input,and extract values from fields that
                             match names in --header, and write to a csv-table.
@@ -37,8 +37,9 @@ Usage
                             Required for pivot. Add a list of header names as
                             comma-separated values. JSON files from --input will
                             be pivoted against this list. Headers MUST BE UNIQUE
-                            (RFC8259 §4). Duplicate headers are discarded. E.g.:
-                            --headers='key1,key2,key3'
+                            (RFC8259 §4). Duplicate headers are discarded.
+                            
+                            E.g.: --headers='key1,key2,key3'
       --strict              Strict mode for pivot. When set, JSON files must have
                             all fields specified with --headers.
       --sort-by SORT_BY     Sort the pivot table by a given key. Specify only one
@@ -150,7 +151,8 @@ list of JSON files against field names specified with
 ``--headers "key1,key2,key3"`` and write it to a csv file
 (default: ``./pivot.csv``).
 
-- You can do sort the CSV list by specifying ``--sort-by "key_name"``.
+- DOES NOT SUPPORT `Rich content`_. CSV files are simple creatures and we should let them be.
+- You can sort the CSV list by specifying ``--sort-by "key_name"``.
 - Sort by (``--sort-by``) ``descending`` or ``ascending`` order (default: ``ascending``).
 - Apply ``--strict`` mode so the pivot fails if at least one JSON file
   does not contain all the keys specified in ``--headers``.
