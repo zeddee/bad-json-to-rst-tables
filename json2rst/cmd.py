@@ -63,6 +63,24 @@ E.g.: --headers='key1,key2,key3'
         """
     )
 
+    cmd_pivot.add_argument(
+        "--sort-by",
+        dest="sort_by",
+        type=str,
+        required=False,
+        help="""Sort the pivot table by a given key.
+        Specify only one key.
+        """
+    )
+
+    cmd_pivot.add_argument(
+        "--sort-order",
+        dest="sort_order",
+        type=str,
+        required=False,
+        help="""Sort --sort-by in 'ascending' or 'descending' order."""
+    )
+
     return parser.parse_args()
 
 def _convert_json_to_rst(infiles: str, outdir: str):
@@ -111,7 +129,7 @@ def cmd():
 
   if not args.pivot:
     _convert_json_to_rst(args.infiles, args.outdir)
-  
+
   else:
     _pivot(args)
     print("YOU HAVE REACHED THE END OF EARLY ACCESS CONTENT.")
