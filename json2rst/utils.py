@@ -81,7 +81,7 @@ def render_page(srcfile: str, json_data: str) -> str:
 
     for k in keys:
         title = "{}{}\n".format(nodes.Nodes.STUB_ITEM.value,k)
-        val = data.get(k)
+        val = str(data.get(k)) #: Coerce to str, because we should not need to handle any other data type.
 
         if isinstance(val, list):
             parsed_val = handle_rich_content(srcfile, val)
@@ -94,7 +94,8 @@ def render_page(srcfile: str, json_data: str) -> str:
     return output
 
 def handle_newlines(data: str) -> str:
-    if "\n" not in data:
+    assert(isinstance(data, str)), "{} must be str".format(data)
+    if ("\n" not in data):
         return data
 
     output = ""
@@ -142,10 +143,12 @@ def smart_filepaths(filepath: str) -> List[str]:
         return out_filelist
 
     if Path(thispath).is_file():
-        if not is_json(thispath):
-            print(f"{thispath} is not a JSON file.")
-            exit(1)
-        return list(thispath)
+        assert(is_json(thispath)), f"{thispath} is not a JSON file."
+
+        outfile = list()
+        outfile.append(Path(thispath))
+
+        return outfile
 
 def write_file(filepath: str, data: str) -> None:
     with open(filepath,"w") as f:

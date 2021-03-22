@@ -48,7 +48,7 @@ and write to a csv-table.
         "--headers",
         dest="pivot_headers",
         type=str,
-        required=True,
+        required=False,
         help="""Required for pivot.
 Add a list of header names as comma-separated values.
 JSON files from --input will be pivoted against this list.
