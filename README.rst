@@ -97,7 +97,7 @@ Expected input
 
     {
         "ID": "this is a title",
-        "CVE": "-",
+        "CVE": "\-",
         "Description": "This is a description",
         "Assessment": [
           {"heading": "This is a heading."},
@@ -122,7 +122,7 @@ Expected output
           * this is a title
 
         - * CVE
-          * -
+          * \-
 
         - * Description
           * This is a description
@@ -153,7 +153,7 @@ This is rendered as:
           * this is a title
 
         - * CVE
-          * -
+          * \-
 
         - * Description
           * This is a description
@@ -218,11 +218,10 @@ You can embed it in an rST file like this:
 
 That is rendered like this:
 
-..  code-block::
 
-    .. csv-table::
-       :header-rows: 1
-       
-       ID,Description
-       EIQ-2021-1235,This is a description
-       EIQ-2021-1234,This is a description
+.. csv-table::
+   :header-rows: 1
+
+   ID,Description
+   EIQ-2021-1235,This is a description
+   EIQ-2021-1234,This is a description
