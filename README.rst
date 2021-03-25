@@ -115,7 +115,6 @@ Expected output
 ..  code-block:: rst
 
     ..  list-table::
-        :header-rows: 1
         :stub-columns: 1
 
         - * ID
@@ -146,7 +145,6 @@ Expected output
 This is rendered as:
 
 ..  list-table::
-        :header-rows: 1
         :stub-columns: 1
 
         - * ID
