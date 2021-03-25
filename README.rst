@@ -7,7 +7,7 @@ To run:
 
 - Clone the repository: ``git clone https://github.com/zeddee/bad-json-to-rst-tables``
 - Navigate to the cloned dir: ``cd bad-json-to-rst-tables``
-- Run the Python package (because I am bad at packaging): ``python3 json2rst --input <inputdir> --output <outputdir>``
+- Run the Python package (because I am bad at packaging): ``python3 json2rst.py --input <inputdir> [--output <outputdir>]``
 
 ..  contents::
     :local:
@@ -26,7 +26,7 @@ Usage
       -h, --help            show this help message and exit
 
     General options:
-      --input INFILES       Input JSON file, or a directory containing JSON files.
+      --input INFILES       (Required) Input JSON file, or a directory containing JSON files.
       --output OUTDIR       Output directory. Defaults to current directory.
 
     Pivot a directory of JSON files:
@@ -57,7 +57,7 @@ Page titles are crudely implemented for now.
 A page title using the filename of the JSON file is
 added to the top of each rST file.
 
-For example, running ``python json2rst --input sample.json --output _output``
+For example, running ``python json2rst.py --input sample.json --output _output``
 creates the file ``_output/sample.rst`` which has the following first few lines:
 
 ..  code-block:: text
@@ -142,6 +142,37 @@ Expected output
             - this is an unordered list item
 
             - this is an unordered list item
+            
+This is rendered as:
+
+..  list-table::
+        :header-rows: 1
+        :stub-columns: 1
+
+        - * ID
+          * this is a title
+
+        - * CVE
+          * -
+
+        - * Description
+          * This is a description
+
+        - * Assessment
+          * **This is a heading.**
+
+            This is a multi
+            line field that can contain things like `links <#link>`_
+            and code ``snippets``
+
+
+            - this is an unordered list item
+
+            **This is a heading.**
+
+            - this is an unordered list item
+
+            - this is an unordered list item
 
 Pivots
 ========
@@ -184,3 +215,14 @@ You can embed it in an rST file like this:
     .. csv-table::
        :header-rows: 1
        :file: ./test.csv
+
+That is rendered like this:
+
+..  code-block::
+
+    .. csv-table::
+       :header-rows: 1
+       
+       ID,Description
+       EIQ-2021-1235,This is a description
+       EIQ-2021-1234,This is a description
